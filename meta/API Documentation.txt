@@ -1,0 +1,78 @@
+All API functions return a Promise object. When writing 'return value',
+we mean the value that is resolved on success.
+Some promises might be rejected, the reject object structure is:
+    {
+        success: false,
+        error: "String description of the error"
+    }
+
+
+The API object is called MedAPI and is available in the global scope in the name medAPI (window.medAPI).
+
+////
+// Users API
+////
+    User object structure: {
+        "id": <NumericSequenceID>,
+        "first_name": "First",
+        "last_name": "Last",
+        "email": "someone@somewhere.com",
+        "permissions": {
+            "all_hospitals": false,
+            "hospitals": [1, 2, 3, 4]
+        }
+    }
+
+    medAPI.users.list();
+    * Return value: [
+        {/* User Object */},
+        {/* User Object */},
+        ...
+    ]
+
+    medAPI.users.get(user_id);
+    * Return value: {/* User Object */}
+
+    medAPI.users.add(
+        first_name, // string, required
+        last_name,  // string, required
+        email,      // string, required
+        all_hospitals_permission, // boolean, required
+        hospitals_permissions     // a (possibly empty) list of Hospital IDs
+                                  // (integer), required
+    )
+    * Return value: {
+        success: true,
+        user: {/* The newly added user object */}
+    }
+
+    medAPI.users.update(
+        user_id,   // the ID of the user to update (integer), required
+        update_obj // a User Object, may contain just a subset of the fields
+                   // for only updating some of the fields.
+                   // If permissions object is provided, it should be an
+                   // object with both the all_hospitals boolean and the
+                   // hospitals list
+    );
+    * Return value: {
+        success: true,
+        user: {/* The freshly updated user object */}
+    }
+
+
+////
+// Hospitals API
+////
+    medAPI.hospitals.list();
+    * Return value:
+        [
+            { id: 1, name: "Name" },
+            { id: 2, name: "Name2" },
+            ...
+        ]
+
+    medAPI.hospitals.get(hospital_id);
+    * Return value: {
+        id: 1,
+        name: "Name"
+    }
